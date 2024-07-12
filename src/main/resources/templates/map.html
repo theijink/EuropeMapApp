@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Map of Europe</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
+    <style>
+        #map {
+            position: relative;
+            width: 1000px; /* Adjust to match your map image width */
+            height: 800px; /* Adjust to match your map image height */
+        }
+        .country-label {
+            position: absolute;
+            text-align: center;
+            transform: translate(-50%, -50%); /* Center the labels */
+        }
+        .country-label img {
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <form action="/" method="get">
+            <input type="text" name="word" placeholder="Enter a word" />
+            <button type="submit">Translate</button>
+        </form>
+    </div>
+    <div id="map">
+        <img src="/images/europe-map.png" alt="Map of Europe" />
+        <!-- Render translations if available -->
+        <div th:if="${not #lists.isEmpty(translations)}" th:each="entry : ${translations}"
+             th:with="country=${entry.value}"
+             th:style="'left: ' + ${country.x} + 'px; top: ' + ${country.y} + 'px;'" 
+             class="country-label">
+            <img th:src="@{/images/__${country.flagUrl}__}" th:alt="${country.name} flag" />
+            <span th:text="${country.translation}">Translation</span>
+        </div>
+        <!-- Render error message if there is an error -->
+        <div th:if="${error}" th:text="${error}" style="color: red;"></div>
+    </div>    
+</body>
+</html>
